@@ -1,0 +1,78 @@
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+		<style>
+			.wordOption {
+				font-size: XX-Large;
+				margin-left: 10px;
+			}
+			.quizWord {
+				font-size: XX-Large;
+				margin-bottom: 5px;
+				font-variant: small-caps;
+			}
+		</style>
+		<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+		<script src="spanish_words.js"></script>
+		<script>
+
+		var baseKeys = shuffle(Object.keys(words))
+		var wordIndex = -1
+		var numberOfChoices = 10
+
+		function shuffle(o) {
+		    for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+		    return o;
+		};
+
+		function nextWord() {
+			wordIndex+=1
+			return baseKeys[wordIndex]
+		}
+
+		function checkAnswer(element) {
+			if (element.attributes["correct"].value == "true") {
+				newWord(numberOfChoices)
+			}
+		}
+
+		function getRandomInt(min, max) {
+		    return Math.floor(Math.random() * (max - min + 1)) + min;
+		}
+
+		function addWordOption(text, isAnswer) {
+			var $div = $("<div>", {id: "foo", "class": "wordOption", "text": text, "correct": isAnswer});
+			$div.click(function(){ checkAnswer(this) });
+			$("#words").append($div);
+		}
+
+		function newWord(numChoices) {
+			var rand = getRandomInt(0,numChoices)
+			// Get the next english word
+			var nw = nextWord()
+			w = words[nw]
+			shuffledWords = shuffle(Object.keys(words))
+			document.getElementById("quizWord").innerText = w
+			document.getElementById("words").innerHTML = ""
+
+			for (i = 0; i < numChoices; i++)
+			{
+				if (i == rand) {
+					addWordOption(nw, true)
+				}
+				addWordOption(shuffledWords[i],false)
+			}
+		}
+		$( document ).ready(function() {
+		    newWord(numberOfChoices)
+		});
+
+
+		</script>
+	</head>
+<BODY>
+	<div class = "quizWord" id = "quizWord"></div>
+<div id = "words">
+</div>
+</BODY>
+</HTML>
