@@ -5,20 +5,48 @@
 			.wordOption {
 				font-size: XX-Large;
 				margin-left: 10px;
+				cursor: hand;
 			}
 			.quizWord {
 				font-size: XX-Large;
 				margin-bottom: 5px;
 				font-variant: small-caps;
+
 			}
+
 		</style>
 		<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-		<script src="spanish_words.js"></script>
+		<xscript src="spa_eng.json"></xscript>
+		<script src="foodwords.json"></script>
 		<script>
 
+		// Create matching game. 10 words, pick one on left, then one on right.
+
+		function swap(json){
+		  var ret = {};
+		  for(var key in json){
+		    ret[json[key]] = key;
+		  }
+  		return ret;
+		}
+
+		words = swap(words)
 		var baseKeys = shuffle(Object.keys(words))
 		var wordIndex = -1
 		var numberOfChoices = 10
+		var answerRight = 0
+		var answerWrong = 0
+		var currentWordCount = 0
+		var wordsWrongInGame = []
+
+		function newGame() {
+			answerRight = 0
+			answerWrong = 0
+			currentWordCount = 1
+			wordsWrongInGame = []
+		}
+
+
 
 		function shuffle(o) {
 		    for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
@@ -32,8 +60,22 @@
 
 		function checkAnswer(element) {
 			if (element.attributes["correct"].value == "true") {
+				answerRight+=1
+				currentWordCount+=1
 				newWord(numberOfChoices)
 			}
+			else {
+				wordsWrongInGame[$('.quizWord').text()] = ""
+				answerWrong+=1
+			}
+
+			updateResults()
+		}
+
+		function updateResults() {
+			document.getElementById("correctAns").innerText = answerRight
+			document.getElementById("wrongAns").innerText = answerWrong
+			document.getElementById("totalWordsAns").innerText = currentWordCount
 		}
 
 		function getRandomInt(min, max) {
@@ -41,13 +83,13 @@
 		}
 
 		function addWordOption(text, isAnswer) {
-			var $div = $("<div>", {id: "foo", "class": "wordOption", "text": text, "correct": isAnswer});
+			var $div = $("<div>", {"class": "wordOption", "text": text, "correct": isAnswer});
 			$div.click(function(){ checkAnswer(this) });
 			$("#words").append($div);
 		}
 
 		function newWord(numChoices) {
-			var rand = getRandomInt(0,numChoices)
+			var rand = getRandomInt(0,numChoices - 1)
 			// Get the next english word
 			var nw = nextWord()
 			w = words[nw]
@@ -71,6 +113,12 @@
 		</script>
 	</head>
 <BODY>
+	<div id = "status">
+		<span class = "info">Correct:</span><span class = "infoAnswer" id = "correctAns">0</span>
+		<span class = "info">Wrong:</span><span class = "infoAnswer" id = "wrongAns">0</span>
+		<span class = "info">Total:</span><span class = "infoAnswer" id = "totalWordsAns">0</span>
+	</div>
+
 	<div class = "quizWord" id = "quizWord"></div>
 <div id = "words">
 </div>
