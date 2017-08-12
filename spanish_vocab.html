@@ -17,76 +17,19 @@
 		</style>
 		<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 		<xscript src="spa_eng.json"></xscript>
+		<script src="helpers.js"></script>
 		<script src="foodwords.json"></script>
 		<script>
 
 		// Create matching game. 10 words, pick one on left, then one on right.
-
-		function swap(json){
-		  var ret = {};
-		  for(var key in json){
-		    ret[json[key]] = key;
-		  }
-  		return ret;
-		}
-
-		words = swap(words)
-		var baseKeys = shuffle(Object.keys(words))
+		var words
+		var baseKeys
 		var wordIndex = -1
 		var numberOfChoices = 10
 		var answerRight = 0
 		var answerWrong = 0
 		var currentWordCount = 0
 		var wordsWrongInGame = []
-
-		function newGame() {
-			answerRight = 0
-			answerWrong = 0
-			currentWordCount = 1
-			wordsWrongInGame = []
-		}
-
-
-
-		function shuffle(o) {
-		    for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-		    return o;
-		};
-
-		function nextWord() {
-			wordIndex+=1
-			return baseKeys[wordIndex]
-		}
-
-		function checkAnswer(element) {
-			if (element.attributes["correct"].value == "true") {
-				answerRight+=1
-				currentWordCount+=1
-				newWord(numberOfChoices)
-			}
-			else {
-				wordsWrongInGame[$('.quizWord').text()] = ""
-				answerWrong+=1
-			}
-
-			updateResults()
-		}
-
-		function updateResults() {
-			document.getElementById("correctAns").innerText = answerRight
-			document.getElementById("wrongAns").innerText = answerWrong
-			document.getElementById("totalWordsAns").innerText = currentWordCount
-		}
-
-		function getRandomInt(min, max) {
-		    return Math.floor(Math.random() * (max - min + 1)) + min;
-		}
-
-		function addWordOption(text, isAnswer) {
-			var $div = $("<div>", {"class": "wordOption", "text": text, "correct": isAnswer});
-			$div.click(function(){ checkAnswer(this) });
-			$("#words").append($div);
-		}
 
 		function newWord(numChoices) {
 			var rand = getRandomInt(0,numChoices - 1)
@@ -97,15 +40,26 @@
 			document.getElementById("quizWord").innerText = w
 			document.getElementById("words").innerHTML = ""
 
+			var offset = 0
 			for (i = 0; i < numChoices; i++)
 			{
 				if (i == rand) {
 					addWordOption(nw, true)
 				}
-				addWordOption(shuffledWords[i],false)
+
+				if (shuffledWords[i] == nw){
+					// Don't put the same answer twice
+					offset+=1
+				}
+				addWordOption(shuffledWords[i + offset],false)
 			}
 		}
 		$( document ).ready(function() {
+			words = dicts["fruits"]
+			words = swap(words)
+			baseKeys = shuffle(Object.keys(words))
+
+			// Load the possible dictionaries
 		    newWord(numberOfChoices)
 		});
 
