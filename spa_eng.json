@@ -1,4 +1,6 @@
-words = {"un, uno, una[Article]":"a",
+var dicts = []
+
+dicts["spanishWords"] = {"un, uno, una[Article]":"a",
 "cerdo hormiguero":"aardvark",
 "oso hormiguero":"aardvark",
 "cerdos hormigueros":"aardvarks",

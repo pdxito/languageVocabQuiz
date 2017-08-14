@@ -1,38 +1,58 @@
 <HTML>
 	<head>
+        <title>Flashcard Quizer</title>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 		<style>
 			.wordOption {
 				font-size: XX-Large;
 				margin-left: 10px;
 				cursor: hand;
+                background-color: white;
 			}
 			.quizWord {
 				font-size: XX-Large;
 				margin-bottom: 5px;
-				font-variant: small-caps;
+				font-variant: normal;
+                font-style: italic;
 
 			}
+            .wordsDiv {
+                display: inherit;
+            }
 
 		</style>
 		<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-		<xscript src="spa_eng.json"></xscript>
+		<script src="spa_eng.json"></script>
 		<script src="helpers.js"></script>
+        <script src="phrases.js"></script>
 		<script src="foodwords.json"></script>
+        
 		<script>
+            /* TODO
+            Dropdown of which dictionary to use
+            To review last word
+            TO have a timer
+            To have multi player
+            To have to type in answer
+            To have one-click skip if you know the answer with short-preview of what was right answer
+            To have no answers shown
+            Create matching game. 10 words, pick one on left, then one on right.
+            */
 
-		// Create matching game. 10 words, pick one on left, then one on right.
 		var words
 		var baseKeys
 		var wordIndex = -1
-		var numberOfChoices = 10
+		var numberOfChoices = 9
 		var answerRight = 0
 		var answerWrong = 0
 		var currentWordCount = 0
 		var wordsWrongInGame = []
+        var swapWords = true
 
 		function newWord(numChoices) {
+            //numChoices = parseInt($("#numChoices").val())
 			var rand = getRandomInt(0,numChoices - 1)
+            console.log(rand)
 			// Get the next english word
 			var nw = nextWord()
 			w = words[nw]
@@ -54,27 +74,87 @@
 				addWordOption(shuffledWords[i + offset],false)
 			}
 		}
-		$( document ).ready(function() {
-			words = dicts["fruits"]
-			words = swap(words)
-			baseKeys = shuffle(Object.keys(words))
+            
+        function loadDicts(){
+            // get the keys of dicts and put into a drop down
+            Object.keys(dicts).forEach(function(w,i){
+                var option = new Option(w,w); 
+                $('#langDicts').append($(option));
+            })
+        }
+            
+    function showAnswer() {
+    $('.wordOption').each(function(i,e){
+            if (e.attributes["correct"].value == "true")
+            {
+             e.style["background-color"] = "gray"   
+            }
+            }
+        )
+    }
 
-			// Load the possible dictionaries
-		    newWord(numberOfChoices)
-		});
+    function toggleVisibility() {
+        if (document.getElementById("wordsDiv").style["display"] != "none")
+        {
+            document.getElementById("wordsDiv").style["display"] = "none"
+        }
+        else {
+            document.getElementById("wordsDiv").style["display"] = "inherit"
+        }
+        
+    }
+            
+    function skipWord() {
+        currentWordCount+=1
+        newWord(numberOfChoices) 
+    }
+            
+  $(document).ready(function() {
+    loadDicts()
+    
+    $(document).keypress(function(e) {
+       //alert(e.which)
+    if(e.which == 97) {
+        showAnswer()
+    }else if(e.which == 102) {
+        showAnswer()
+        setTimeout(skipWord, 500);
+   }else if(e.which == 115) {
+       swapWords = !swapWords
+   }else if(e.which == 100) {
+       toggleVisibility()
+   }
+    });
+    
+    $( "#langDicts" ).change(function(opt) {
+        $( "select option:selected" ).each(function() {
+          changeDict($( this ).text())
+        });
+    });
+      
+    changeDict("spanishWords")
+  }); // End document.ready
 
 
 		</script>
 	</head>
 <BODY>
+    
 	<div id = "status">
+        <span class = "numOptions"><input id = "numOptions" type = "text" value = 10></input></span>
+        <span class = "btn"><input type = "button" onClick = "showAnswer()" value ="Show Answer"></input>
+        </span>
+        <span class = "availableDicts">
+            <select id = "langDicts"></select>
+        </span>
 		<span class = "info">Correct:</span><span class = "infoAnswer" id = "correctAns">0</span>
 		<span class = "info">Wrong:</span><span class = "infoAnswer" id = "wrongAns">0</span>
 		<span class = "info">Total:</span><span class = "infoAnswer" id = "totalWordsAns">0</span>
 	</div>
 
 	<div class = "quizWord" id = "quizWord"></div>
-<div id = "words">
+<div id = "wordsDiv" class = "wordsDiv">
+    <ol id = "words"></ol>
 </div>
 </BODY>
 </HTML>
