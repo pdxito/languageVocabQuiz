@@ -26,7 +26,7 @@
 		<script src="helpers.js"></script>
         <script src="phrases.js"></script>
 		<script src="foodwords.json"></script>
-        
+
 		<script>
             /* TODO
             Dropdown of which dictionary to use
@@ -74,20 +74,20 @@
 				addWordOption(shuffledWords[i + offset],false)
 			}
 		}
-            
+
         function loadDicts(){
             // get the keys of dicts and put into a drop down
             Object.keys(dicts).forEach(function(w,i){
-                var option = new Option(w,w); 
+                var option = new Option(w,w);
                 $('#langDicts').append($(option));
             })
         }
-            
+
     function showAnswer() {
     $('.wordOption').each(function(i,e){
             if (e.attributes["correct"].value == "true")
             {
-             e.style["background-color"] = "gray"   
+             e.style["background-color"] = "gray"
             }
             }
         )
@@ -101,37 +101,41 @@
         else {
             document.getElementById("wordsDiv").style["display"] = "inherit"
         }
-        
+
     }
-            
+
     function skipWord() {
         currentWordCount+=1
-        newWord(numberOfChoices) 
+        newWord(numberOfChoices)
     }
-            
+
+		function showNTell() {
+			showAnswer()
+			setTimeout(skipWord, 500);
+		}
+
   $(document).ready(function() {
     loadDicts()
-    
+
     $(document).keypress(function(e) {
        //alert(e.which)
     if(e.which == 97) {
         showAnswer()
     }else if(e.which == 102) {
-        showAnswer()
-        setTimeout(skipWord, 500);
+    showNTell()
    }else if(e.which == 115) {
        swapWords = !swapWords
    }else if(e.which == 100) {
        toggleVisibility()
    }
     });
-    
+
     $( "#langDicts" ).change(function(opt) {
         $( "select option:selected" ).each(function() {
           changeDict($( this ).text())
         });
     });
-      
+
     changeDict("spanishWords")
   }); // End document.ready
 
@@ -139,10 +143,9 @@
 		</script>
 	</head>
 <BODY>
-    
+
 	<div id = "status">
         <span class = "numOptions"><input id = "numOptions" type = "text" value = 10></input></span>
-        <span class = "btn"><input type = "button" onClick = "showAnswer()" value ="Show Answer"></input>
         </span>
         <span class = "availableDicts">
             <select id = "langDicts"></select>
@@ -153,8 +156,15 @@
 	</div>
 
 	<div class = "quizWord" id = "quizWord"></div>
-<div id = "wordsDiv" class = "wordsDiv">
-    <ol id = "words"></ol>
-</div>
+
+	<div id = "wordsDiv" class = "wordsDiv">
+	    <ol id = "words"></ol>
+	</div>
+
+	<div id = "shortcuts">
+	        <span class = "btn"><input type = "button" onClick = "showAnswer()" value ="Show Answer"></input>
+					<span class = "btn"><input type = "button" onClick = "showNTell()" value ="Show N Go"></input>
+	</div>
+
 </BODY>
 </HTML>
