@@ -22,10 +22,10 @@
 
 		</style>
 		<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-		<script src="spa_eng.json"></script>
+		<script src="spa_eng.js"></script>
 		<script src="helpers.js"></script>
         <script src="phrases.js"></script>
-		<script src="foodwords.json"></script>
+		<script src="foodwords.js"></script>
 
 		<script>
             /* TODO
@@ -50,7 +50,8 @@
         var swapWords = true
 
 		function newWord(numChoices) {
-            //numChoices = parseInt($("#numChoices").val())
+            numChoices = parseInt($("#numOptions").val())
+            
 			var rand = getRandomInt(0,numChoices - 1)
             console.log(rand)
 			// Get the next english word
@@ -65,13 +66,16 @@
 			{
 				if (i == rand) {
 					addWordOption(nw, true)
-				}
+				} else 
+                    {
+                        addWordOption(shuffledWords[i + offset],false)
+                    }
 
 				if (shuffledWords[i] == nw){
 					// Don't put the same answer twice
 					offset+=1
 				}
-				addWordOption(shuffledWords[i + offset],false)
+				
 			}
 		}
 
@@ -145,11 +149,10 @@
 <BODY>
 
 	<div id = "status">
-        <span class = "numOptions"><input id = "numOptions" type = "text" value = 10></input></span>
-        </span>
-        <span class = "availableDicts">
-            <select id = "langDicts"></select>
-        </span>
+        	        <span class = "btn"><input type = "button" onClick = "showAnswer()" value ="Show Answer"/></span>
+    <span class = "btn"><input type = "button" onClick = "showNTell()" value ="Show N Go"/></span>
+        
+
 		<span class = "info">Correct:</span><span class = "infoAnswer" id = "correctAns">0</span>
 		<span class = "info">Wrong:</span><span class = "infoAnswer" id = "wrongAns">0</span>
 		<span class = "info">Total:</span><span class = "infoAnswer" id = "totalWordsAns">0</span>
@@ -162,9 +165,16 @@
 	</div>
 
 	<div id = "shortcuts">
-	        <span class = "btn"><input type = "button" onClick = "showAnswer()" value ="Show Answer"></input>
-					<span class = "btn"><input type = "button" onClick = "showNTell()" value ="Show N Go"></input>
+	        <span class = "btn"><input type = "button" onClick = "showAnswer()" value ="Show Answer"/></span>
+    <span class = "btn"><input type = "button" onClick = "showNTell()" value ="Show N Go"/></span>
+
 	</div>
+    <div>
+            <span class = "numOptions"><input id = "numOptions" type = "text" value = "10"/></span>
+
+        <span class = "availableDicts">
+            <select id = "langDicts"></select>
+        </span></div>
 
 </BODY>
 </HTML>
