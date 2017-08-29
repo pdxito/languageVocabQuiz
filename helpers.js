@@ -60,14 +60,23 @@ function nextWord() {
 }
 
 function checkAnswer(element) {
+
   if (element.attributes["correct"].value == "true") {
-    answerRight+=1
-    currentWordCount+=1
-    newWord(numberOfChoices)
+    if (element.attributes["chosen"] == undefined) {
+        // First click
+        element.setAttribute("chosen", "true")
+        answerRight+=1
+        currentWordCount+=1
+        element.style["background-color"] = "green"
+    } else {
+        // Second click, move on
+        newWord(numberOfChoices)
+    }
   }
   else {
     wordsWrongInGame[$('.quizWord').text()] = ""
     answerWrong+=1
+    element.style["background-color"] = "pink"
   }
   updateResults()
 }
