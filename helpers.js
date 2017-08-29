@@ -59,6 +59,13 @@ function nextWord() {
   return baseKeys[wordIndex]
 }
 
+function showAllAnswers() {
+     $('.wordOption').each(function(i,e){
+            e.innerText = e.innerText + " -> " + e.attributes["translatedText"].value
+            }
+        )
+}
+
 function checkAnswer(element) {
 
   if (element.attributes["correct"].value == "true") {
@@ -78,6 +85,7 @@ function checkAnswer(element) {
     answerWrong+=1
     element.style["background-color"] = "pink"
   }
+element.innerText = element.innerText + " -> " + element.attributes["translatedText"].value
   updateResults()
 }
 
@@ -87,8 +95,8 @@ function updateResults() {
   document.getElementById("totalWordsAns").innerText = currentWordCount
 }
 
-function addWordOption(text, isAnswer) {
-    var $div = $("<li>", {"class": "wordOption", "text": text, "correct": isAnswer});
+function addWordOption(text, translatedText, isAnswer) {
+    var $div = $("<li>", {"class": "wordOption", "text": text, "translatedText": translatedText, "correct": isAnswer});
     $div.click(function(){ checkAnswer(this) });
     $("#words").append($div);
 }

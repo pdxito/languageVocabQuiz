@@ -39,6 +39,8 @@
             To have one-click skip if you know the answer with short-preview of what was right answer
             To have no answers shown
             Create matching game. 10 words, pick one on left, then one on right.
+            To be able to remove one wrong word
+            To be able to show the english equivalent
             */
 
 		var words
@@ -67,11 +69,12 @@
 			for (i = 0; i < numChoices; i++)
 			{
 				if (i == rand) {
-					addWordOption(nw, true)
+					addWordOption(nw, w, true)
 				} else 
-                    {
-                        addWordOption(shuffledWords[i + offset],false)
-                    }
+                {
+                    guessWord = shuffledWords[i + offset]
+                    addWordOption(guessWord, words[guessWord], false)
+                }
 
 				if (shuffledWords[i] == nw){
 					// Don't put the same answer twice
@@ -89,11 +92,14 @@
             })
         }
 
+            function removeWrongChoice() {
+                
+            }
     function showAnswer() {
     $('.wordOption').each(function(i,e){
             if (e.attributes["correct"].value == "true")
             {
-             e.style["background-color"] = "gray"
+             e.style["background-color"] = "green"
             }
             }
         )
@@ -124,10 +130,12 @@
     loadDicts()
 
     $(document).keypress(function(e) {
-       //alert(e.which)
+      // alert(e.which)
     if(e.which == 97) {
         showAnswer()
-    }else if(e.which == 102) {
+    }else if(e.which == 116) {
+    showAllAnswers()
+   }else if(e.which == 102) {
     showNTell()
    }else if(e.which == 115) {
        swapWords = !swapWords
