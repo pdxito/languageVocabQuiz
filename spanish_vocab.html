@@ -18,9 +18,10 @@
                 font-family: "Arial";
 
 			}
-            .wordsDiv {
-                display: inherit;
-            }
+        .wordsDiv {
+					margin-left: 10px;
+          display: inherit;
+        }
 
 		</style>
 		<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
@@ -51,11 +52,11 @@
 		var answerWrong = 0
 		var currentWordCount = 0
 		var wordsWrongInGame = []
-        var swapWords = true
+    var swapWords = true
 
 		function newWord(numChoices) {
             numChoices = parseInt($("#numOptions").val())
-            
+
 			var rand = getRandomInt(0,numChoices - 1)
             console.log(rand)
 			// Get the next english word
@@ -70,7 +71,7 @@
 			{
 				if (i == rand) {
 					addWordOption(nw, w, true)
-				} else 
+				} else
                 {
                     guessWord = shuffledWords[i + offset]
                     addWordOption(guessWord, words[guessWord], false)
@@ -80,7 +81,7 @@
 					// Don't put the same answer twice
 					offset+=1
 				}
-				
+
 			}
 		}
 
@@ -93,7 +94,7 @@
         }
 
             function removeWrongChoice() {
-                
+
             }
     function showAnswer() {
     $('.wordOption').each(function(i,e){
@@ -126,22 +127,26 @@
 			setTimeout(skipWord, 500);
 		}
 
+		function toggleWordTranslation() {
+				swapWords = !swapWords
+			}
+
   $(document).ready(function() {
     loadDicts()
 
     $(document).keypress(function(e) {
       // alert(e.which)
-    if(e.which == 97) {
-        showAnswer()
-    }else if(e.which == 116) {
-    showAllAnswers()
-   }else if(e.which == 102) {
-    showNTell()
-   }else if(e.which == 115) {
-       swapWords = !swapWords
-   }else if(e.which == 100) {
-       toggleVisibility()
-   }
+	    if(e.which == 97) {
+	        showAnswer()
+	    } else if(e.which == 116) {
+	    	showAllAnswers()
+	   } else if(e.which == 102) {
+	    	showNTell()
+	   } else if(e.which == 115) {
+	       toggleWordTranslation()
+	   } else if(e.which == 100) {
+	       toggleVisibility()
+	   }
     });
 
     $( "#langDicts" ).change(function(opt) {
@@ -159,9 +164,10 @@
 <BODY>
 
 	<div id = "status">
-        	        <span class = "btn"><input type = "button" onClick = "showAnswer()" value ="Show Answer"/></span>
+		<span class = "btn"><input type = "button" onClick = "toggleWordTranslation()" value ="Toggle Language"/></span>
+    <span class = "btn"><input type = "button" onClick = "showAnswer()" value ="Show Answer"/></span>
     <span class = "btn"><input type = "button" onClick = "showNTell()" value ="Show N Go"/></span>
-        
+
 
 		<span class = "info">Correct:</span><span class = "infoAnswer" id = "correctAns">0</span>
 		<span class = "info">Wrong:</span><span class = "infoAnswer" id = "wrongAns">0</span>
